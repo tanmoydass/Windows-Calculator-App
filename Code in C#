@@ -1,0 +1,208 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+
+namespace Calculator
+{
+    public partial class Form1 : Form
+    {
+        string operation = "+";
+        double result = 0;
+        double tempResult = 0;
+        double res = 0;
+        int operationDone = 0;
+        int equalDone = 0;
+        int dotDone = 0;
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+        private void button_click(object sender, EventArgs e)
+        {
+            try
+            {
+                Button bt = (Button)sender;
+                if (textBox.Text == "0" || operationDone > 0)
+                {
+                    textBox.Text.Clear();
+                    operationDone = 0;
+                }
+                textBox.Text = textBox.Text + BringToFront().Text;
+                richTextBox.Text = richTextBox.Text + bt.Text;
+                tempResult = Convert.ToDouble(richTextBox.Text);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        private void dot_click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dotDone == 0)
+                {
+                    Button bt = (Button)sender;
+                    if (textBox.Text == "0" || operationDone > 0)
+                    {
+                        textBox.Text.Clear();
+                        operationDone = 0;
+                    }
+                    textBox.Text = textBox.Text + BringToFront().Text;
+                    richTextBox.Text = richTextBox.Text + bt.Text;
+                    dotDone = 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        private void operator_click(object sender, EventArgs e)
+        {
+            try
+            {
+                Button bt = (Button)sender;
+                dotDone = 0;
+                if (operationDone == 0 && equalDone == 0)
+                {
+                    switch (operation)
+                    {
+                        case "+":
+                            result = result + Convert.ToDouble(textBox.Text);
+                            break;
+                        case "-":
+                            result = result - Convert.ToDouble(textBox.Text);
+                            break;
+                        case "/":
+                            result = result / Convert.ToDouble(textBox.Text);
+                            break;
+                        case "*":
+                            result = result * Convert.ToDouble(textBox.Text);
+                            break;
+                        default:
+                            break;
+                    }
+                    operation = bt.Text;
+                    richTextBox.Text = Convert.ToString(result) + operation;
+                    operationDone++;
+                }
+                else if (operationDone == 0 && equalDone == 1)
+                {
+                    operation = bt.Text;
+                    equalDone = 0;
+                    tempResult = 0;
+                    richTextBox.Text = Convert.ToString(result) + operation;
+                    operationDone++;
+                }
+                res = result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        private void clear_click(object sender, EventArgs e)
+        {
+            try
+            {
+                textBox.Clear();
+                richTextBox.Clear();
+                textHistory.Clear();
+                operation = "+";
+                result = 0;
+                tempResult = 0;
+                res = 0;
+                operationDone = 0;
+                equalDone = 0;
+                dotDone = 0;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        private void delete_click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (textBox.Text[textBox.Text.Length - 1].Equals('.'))
+                {
+                    dotDone = 0;
+                }
+                if (textBox.Text[textBox.Length - 1].Equals('+') || textBox.Text[textBox.Length - 1].Equals('-') || textBox.Text[textBox.Length - 1].Equals('/') || textBox.Text[textBox.Length - 1].Equals('*'))
+                {
+                    operationDone = 0;
+                    result = res;
+                    richTextBox.Text = Convert.ToString(res);
+                }
+                else
+                {
+                    richTextBox.Text = richTextBox.Text.Remove(richTextBox.Text.Length - 1);
+                }
+                if (operationDone == 0)
+                {
+                    textBox.Text = textBox.Text.Remove[textBox.Text.Length - 1];
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        private void equal_click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (operationDone == 0)
+                {
+                    switch (operation)
+                    {
+                        case "+":
+                            result = result + Convert.ToDouble(textBox.Text);
+                            break;
+                        case "-":
+                            result = result - Convert.ToDouble(textBox.Text);
+                            break;
+                        case "/":
+                            result = result / Convert.ToDouble(textBox.Text);
+                            break;
+                        case "*":
+                            result = result * Convert.ToDouble(textBox.Text);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                string st = Convert.ToString(res) + operation + textBox.Text + "=" + Convert.ToString(result);
+                textHistory.AppendText(st);
+                textHistory.AppendText(Environment.NewLine);
+                TextBox.Text = Convert.ToString(result);
+                RichTextBox.Text = Convert.ToString(result);
+                operationDone = 0;
+                dotDone = 0;
+                res = result;
+                tempResult = result;
+                result = 0;
+                equalDone = 1;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+    }
+}
